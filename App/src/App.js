@@ -11,6 +11,8 @@ import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import ConsultationPage from './pages/ConsultationPage';
 import LoginPage from './pages/Auth/Login/LoginPage';
+import RegisterPage from './pages/Auth/Register/RegisterPage';
+import Uni from './pages/Country/Uni';
 
 // Import admin pages
 import AdminPage from './pages/admin/AdminPage';
@@ -25,29 +27,27 @@ import AdminCoursesPage from './pages/admin/AdminCoursesPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminTestimonialsPage from './pages/admin/AdminTestimonialsPage';
 
-// Import auth pages
-import RegisterPage from './pages/Auth/Register/RegisterPage';
-import Uni from './pages/Country/Uni';
+// Import layout
+import PublicLayout from './components/PublicLayout';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/study-abroad" element={<StudyAbroadPage />} />
-          <Route path="/preparation-classes" element={<PreparationClassesPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/consultation" element={<ConsultationPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path='/uni' element={<Uni />} />
-          
-          {/* Auth routes */}
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          {/* Public routes wrapped with PublicLayout */}
+          <Route path="/" element={<PublicLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="study-abroad" element={<StudyAbroadPage />} />
+            <Route path="preparation-classes" element={<PreparationClassesPage />} />
+            <Route path="blog" element={<BlogPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="consultation" element={<ConsultationPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="uni/:country" element={<Uni />} />
+          </Route>
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout />}>

@@ -202,7 +202,6 @@ export default function PreparationClassesPage() {
 
   return (
     <div className="prep-page">
-      <Header />
       
       {/* Hero Section */}
       <section className="prep-hero">

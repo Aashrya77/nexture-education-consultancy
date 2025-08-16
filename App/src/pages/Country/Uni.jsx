@@ -1,6 +1,31 @@
-import React from 'react';
-import './Uni.css'; // Assuming you have a CSS file for styling
+import React, { useEffect, useOptimistic } from 'react';
+import { useParams } from 'react-router-dom';
+import base_url from '../../config'; // Adjust the import path as necessary
+import './Uni.css'; 
+import axios from 'axios' 
+// Assuming you have a CSS file for styling
 const Uni = () => {
+  const [universities, setUniversities] = React.useState([]);
+let {country} = useParams();
+  useEffect(() => {
+    getUni();
+  }, [country]);
+  const getUni = async () => {
+    
+    try {
+      const response = await axios.get(`${base_url}/api/universities/${country}`);
+      if (response.data.success) {
+        console.log('Universities fetched successfully:', response.data.data);
+        console.log('Data:', response);
+        setUniversities(response.data.data);
+      } else {
+        console.error('Failed to fetch universities:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching universities:', error);
+      
+    }
+  }
   return (
     <div className="study-australia-container">
       {/* Hero Section */}
@@ -29,72 +54,47 @@ const Uni = () => {
       </section>
 
       {/* About Section */}
-      <section className="about-section">
+     {universities.map((uni, index) => {
+      return (
+        <>
+          <section className="about-section" >
         <div className="container">
           <h2 className="about-title">
-            Australia has a reputation for<br />
-            an <span className="highlight">innovative and research-<br />
-            intensive culture</span>
+            {uni.title}
           </h2>
           <p className="about-description">
-            If you are interested in studying in Australia then you are taking one step closer towards choosing a 
-            truly fruitful academic experience. Australia is a fully developed, growing economy with a safe, 
-            tolerant and multicultural society. Students will find studying in Australia a relaxed, welcoming and 
-            engaging environment that is unique in the native English speaking world.
+            {uni.description}
           </p>
         </div>
       </section>
-
-      {/* Reasons Section */}
       <section className="reasons-section">
         <div className="container">
           <div className="reasons-header">
             <h2 className="reasons-title">
               Reasons for<br />
-              studying in <span className="highlight">Australia</span>
+              studying in <span className="highlight">{uni.country}</span>
             </h2>
-            <p className="reasons-description">
-              of state-of-the-art laboratories and classrooms, outstanding libraries 
-              and modern technology. Institutions deliver practical and career-
-              orientated training so graduates can be confident that they have the 
-              skills expected by employers. Academic staff is recruited from 
-              around the world and often are leading experts in their field. 
-              Australian teachers are experienced in supervising both domestic 
-              and international students from a variety of different countries.
-            </p>
           </div>
+          {uni.features.map((feature, featureIndex) => {
+            return (
+              <div className="reasons-grid">
+            <div className="reason-card" key={featureIndex}>
+              <h3 className="reason-title">{feature.title}</h3>
+              <p className="reason-description">
+                {feature.description}
+              </p>
+            </div>
+          </div>
+            )
+          }) }
           
-          <div className="reasons-grid">
-            <div className="reason-card">
-              <div className="reason-number">1.</div>
-              <h3 className="reason-title">Quality in Education</h3>
-              <p className="reason-description">
-                Australia's commitment to education excellence, innovative teaching, and 
-                cutting-edge research fosters high-quality learning, preparing students for 
-                future success.
-              </p>
-            </div>
-            
-            <div className="reason-card">
-              <div className="reason-number">2.</div>
-              <h3 className="reason-title">Good Potential For Employment After Course Completion.</h3>
-              <p className="reason-description">
-                These courses open doors to diverse job opportunities. Skills gained lead to 
-                promising career prospects in various industries.
-              </p>
-            </div>
-            
-            <div className="reason-card">
-              <div className="reason-number">3.</div>
-              <h3 className="reason-title">English as a Second Language (ESL) Programs</h3>
-              <p className="reason-description">
-                Australian ESL programs offer personalized language learning. 
-                Qualified instructors and immersive environments nurture language skills.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
+  
+        </>
+      )
+     })}
+      
 
     </div>
   );

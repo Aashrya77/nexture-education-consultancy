@@ -123,7 +123,6 @@ export default function ContactPage() {
 
   return (
     <div className="contact-page">
-      <Header />
       
       {/* Hero Section */}
       <section className="contact-hero">

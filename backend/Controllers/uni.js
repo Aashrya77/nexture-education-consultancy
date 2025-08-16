@@ -1,4 +1,3 @@
-const express = require('express');
 const uniSchema = require('../models/University'); 
 // Adjust the path as necessary
 const getUni = async (req, res) => {

@@ -149,7 +149,6 @@ export default function HomePage() {
 
   return (
     <div className="homepage">
-      <Header />
 
       {/* Modern Hero Section */}
       <section className="modern-hero-section">

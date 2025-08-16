@@ -82,7 +82,6 @@ export default function AboutPage() {
 
   return (
     <div className="about-page">
-      <Header />
       
       {/* Hero Section */}
       <section className="about-hero">

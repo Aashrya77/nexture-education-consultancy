@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 const University = require("../models/University"); // Adjust the path as necessary
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
-        console.log('✅ Connected to MongoDB successfully');
+        await mongoose.connect(process.env.MONGODB_URI)
+
+     
+        console.log('Connected to MongoDB successfully');
     } catch (error) {
         console.error('❌ MongoDB connection error:', error);
         process.exit(1);
@@ -22,17 +24,17 @@ const universities = [
   },
 ];
 
-async function populateUniversities() {
-  try {
-    await University.deleteMany(); // optional: clear existing data
-    const inserted = await University.insertMany(universities);
-    console.log("Universities added:", inserted);
-    mongoose.connection.close();
-  } catch (err) {
-    console.error(err);
-  }
-}
+// async function populateUniversities() {
+//   try {
+//     await University.deleteMany(); // optional: clear existing data
+//     const inserted = await University.insertMany(universities);
+//     console.log("Universities added:", inserted);
+//     mongoose.connection.close();
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
 
-populateUniversities();
+// populateUniversities();
 
 module.exports = connectDB;
