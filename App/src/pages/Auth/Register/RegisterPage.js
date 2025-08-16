@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import { authAPI } from '../../../services/api';
 import './RegisterPage.css';
 
 export default function RegisterPage() {
@@ -15,7 +15,25 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [isAnimated, setIsAnimated] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsAnimated(true);
+  }, []);
+
+  const calculatePasswordStrength = (password) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[0-9]/.test(password)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+    return strength;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +41,12 @@ export default function RegisterPage() {
       ...prev,
       [name]: value
     }));
+    
+    // Calculate password strength
+    if (name === 'password') {
+      setPasswordStrength(calculatePasswordStrength(value));
+    }
+    
     // Clear messages when user starts typing
     if (error) setError('');
     if (success) setSuccess('');
@@ -58,27 +82,13 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
     setIsLoading(true);
     setError('');
-
+    setSuccess('');
     try {
-      const registrationData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password
-      };
-
-      const response = await authAPI.register(registrationData);
-      
+      const response = await authAPI.register(formData);
       if (response.success) {
-        setSuccess('Registration successful! Please check your email for verification.');
+        setSuccess('Admin account created successfully! Redirecting to login...');
         setTimeout(() => {
           navigate('/login');
         }, 2000);
@@ -87,22 +97,34 @@ export default function RegisterPage() {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      setError('Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setError('Registration failed. Please check your details and try again.');
     }
-  };
+    setIsLoading(false);
+  }
+
+
 
   return (
     <div className="register-page">
-      <div className="register-container">
+      <div className="register-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
+        </div>
+      </div>
+      
+      <div className={`register-container ${isAnimated ? 'animated' : ''}`}>
         <div className="register-card">
           <div className="register-header">
             <Link to="/" className="register-logo">
+              <div className="logo-icon">🎓</div>
               <h1>Nexture Education</h1>
             </Link>
-            <h2 className="register-title">Create Account</h2>
-            <p className="register-subtitle">Join thousands of students achieving their dreams</p>
+            <h2 className="register-title">Create Admin Account</h2>
+            <p className="register-subtitle">Register as an administrator to manage the platform</p>
           </div>
 
           {error && (
@@ -180,30 +202,68 @@ export default function RegisterPage() {
             <div className="register-form-row">
               <div className="register-field">
                 <label htmlFor="password" className="register-label">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="register-input"
-                  placeholder="Create a password"
-                  required
-                />
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="register-input"
+                    placeholder="Create a password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+                {formData.password && (
+                  <div className="password-strength">
+                    <div className="strength-bar">
+                      <div 
+                        className={`strength-fill strength-${passwordStrength}`}
+                        style={{ width: `${(passwordStrength / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className={`strength-text strength-${passwordStrength}`}>
+                      {passwordStrength <= 2 ? 'Weak' : passwordStrength <= 3 ? 'Medium' : 'Strong'}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="register-field">
                 <label htmlFor="confirmPassword" className="register-label">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="register-input"
-                  placeholder="Confirm your password"
-                  required
-                />
+                <div className="password-input-container">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="register-input"
+                    placeholder="Confirm your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                  <div className="password-mismatch">
+                    ⚠️ Passwords do not match
+                  </div>
+                )}
               </div>
             </div>
 
@@ -231,26 +291,6 @@ export default function RegisterPage() {
             <p>
               <Link to="/" className="register-link">← Back to Home</Link>
             </p>
-          </div>
-        </div>
-
-        <div className="register-info">
-          <h3>Why Join Nexture Education?</h3>
-          <ul>
-            <li>🎯 Personalized education counseling</li>
-            <li>🌍 Access to 150+ partner universities</li>
-            <li>📚 Comprehensive test preparation</li>
-            <li>💼 Career guidance and support</li>
-            <li>🏆 98% success rate</li>
-            <li>📧 Priority consultation booking</li>
-          </ul>
-          
-          <div className="register-testimonial">
-            <blockquote>
-              "Nexture Education helped me get into my dream university. 
-              The personalized guidance was invaluable!"
-            </blockquote>
-            <cite>- Sarah Johnson, Harvard University</cite>
           </div>
         </div>
       </div>

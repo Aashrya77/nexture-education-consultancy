@@ -4,6 +4,9 @@ const User = require('../models/User');
 const Contact = require('../models/Contact');
 const Consultation = require('../models/Consultation');
 const Blog = require('../models/Blog');
+const Service = require('../models/Service');
+const TeamMember = require('../models/TeamMember');
+const CaseStudy = require('../models/CaseStudy');
 const { auth, authorize } = require('../middleware/auth');
 
 const router = express.Router();
@@ -25,7 +28,13 @@ router.get('/dashboard', async (req, res) => {
       totalUsers,
       activeUsers,
       totalBlogs,
-      publishedBlogs
+      publishedBlogs,
+      totalServices,
+      activeServices,
+      totalTeamMembers,
+      activeTeamMembers,
+      totalCaseStudies,
+      publishedCaseStudies
     ] = await Promise.all([
       Contact.countDocuments(),
       Contact.countDocuments({ status: 'new' }),
@@ -34,7 +43,13 @@ router.get('/dashboard', async (req, res) => {
       User.countDocuments(),
       User.countDocuments({ isActive: true }),
       Blog.countDocuments(),
-      Blog.countDocuments({ status: 'published' })
+      Blog.countDocuments({ status: 'published' }),
+      Service.countDocuments(),
+      Service.countDocuments({ isActive: true }),
+      TeamMember.countDocuments(),
+      TeamMember.countDocuments({ isActive: true }),
+      CaseStudy.countDocuments(),
+      CaseStudy.countDocuments({ status: 'published' })
     ]);
 
     // Get recent activities
@@ -72,6 +87,18 @@ router.get('/dashboard', async (req, res) => {
           blogs: {
             total: totalBlogs,
             published: publishedBlogs
+          },
+          services: {
+            total: totalServices,
+            active: activeServices
+          },
+          team: {
+            total: totalTeamMembers,
+            active: activeTeamMembers
+          },
+          caseStudies: {
+            total: totalCaseStudies,
+            published: publishedCaseStudies
           }
         },
         recentActivity: {

@@ -14,15 +14,13 @@ const generateToken = (userId) => {
 };
 
 // @route   POST /api/auth/register
-// @desc    Register a new user
-// @access  Public (Admin only in production)
+// @desc    Register a new admin user
+// @access  Public (Admin registration only)
 router.post('/register', [
   body('firstName').trim().isLength({ min: 1, max: 50 }).withMessage('First name is required and must be less than 50 characters'),
   body('lastName').trim().isLength({ min: 1, max: 50 }).withMessage('Last name is required and must be less than 50 characters'),
   body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('role').optional().isIn(['admin', 'counselor', 'staff']).withMessage('Invalid role'),
-  body('department').optional().isIn(['admissions', 'counseling', 'test-prep', 'visa', 'marketing', 'admin']).withMessage('Invalid department'),
   body('phone').optional().trim().isLength({ max: 20 }).withMessage('Phone number must be less than 20 characters')
 ], async (req, res) => {
   try {
@@ -36,7 +34,7 @@ router.post('/register', [
       });
     }
 
-    const { firstName, lastName, email, password, role, department, phone } = req.body;
+    const { firstName, lastName, email, password, phone } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -47,14 +45,14 @@ router.post('/register', [
       });
     }
 
-    // Create user
+    // Create admin user only
     const user = new User({
       firstName,
       lastName,
       email,
       password,
-      role: role || 'staff',
-      department: department || 'counseling',
+      role: 'admin',
+      department: 'admin',
       phone
     });
 
@@ -125,6 +123,14 @@ router.post('/login', [
       });
     }
 
+    // Check if user is admin
+    if (user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. Admin privileges required.'
+      });
+    }
+
     // Check password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
@@ -143,8 +149,8 @@ router.post('/login', [
     res.json({
       success: true,
       message: 'Login successful',
-      data: {
-        token,
+      token,
+      
         user: {
           id: user._id,
           firstName: user.firstName,
@@ -153,7 +159,6 @@ router.post('/login', [
           role: user.role,
           department: user.department,
           lastLogin: user.lastLogin
-        }
       }
     });
 

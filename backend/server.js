@@ -9,10 +9,11 @@ const app = express();
 
 // Import routes
 const contactRoutes = require('./routes/contact');
-const consultationRoutes = require('./routes/consultation');
-const blogRoutes = require('./routes/blog');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const teamRoutes = require('./routes/team');
+
+const universityRoutes = require('./routes/university');
 
 // Middleware
 app.use(helmet());
@@ -48,10 +49,13 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/contact', contactRoutes);
-app.use('/api/consultation', consultationRoutes);
-app.use('/api/blog', blogRoutes);
+
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+
+app.use('/api/team', teamRoutes);
+
+app.use('/api/universities', universityRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -122,5 +126,3 @@ const start = async () => {
 };
 
 start();
-
-module.exports = app;
