@@ -3,13 +3,16 @@ import { useParams } from 'react-router-dom';
 import base_url from '../../config'; // Adjust the import path as necessary
 import './Uni.css'; 
 import axios from 'axios' 
+import { useState } from 'react';
 // Assuming you have a CSS file for styling
 const Uni = () => {
   const [universities, setUniversities] = React.useState([]);
+    const [currentCountry, setCurrentCountry] = React.useState('');
+
 let {country} = useParams();
   useEffect(() => {
     getUni();
-  }, [country]);
+  }, []);
   const getUni = async () => {
     
     try {
@@ -18,6 +21,7 @@ let {country} = useParams();
         console.log('Universities fetched successfully:', response.data.data);
         console.log('Data:', response);
         setUniversities(response.data.data);
+        setCurrentCountry(response.data.data[0].country);
       } else {
         console.error('Failed to fetch universities:', response.data.message);
       }
@@ -40,7 +44,7 @@ let {country} = useParams();
         <div className="hero-content">
           <h1 className="hero-title">
             Study in<br />
-            <span className="australia-text">Australia</span>
+            <span className="australia-text">{currentCountry}</span>
           </h1>
         </div>
         
@@ -55,6 +59,7 @@ let {country} = useParams();
 
       {/* About Section */}
      {universities.map((uni, index) => {
+      
       return (
         <>
           <section className="about-section" >

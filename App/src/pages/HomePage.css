@@ -113,25 +113,25 @@
   animation: fadeInUp 0.8s ease-out 0.8s both;
 }
 
-.btn-hero-primary {
+.btn-modern-primary {
   background-color: #ffffff;
   color: var(--purple-600);
   border: 2px solid #ffffff;
 }
 
-.btn-hero-primary:hover {
+.btn-modern-primary:hover {
   background-color: transparent;
   color: #ffffff;
   border-color: #ffffff;
 }
 
-.btn-hero-secondary {
+.btn-modern-secondary {
   background-color: transparent;
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
-.btn-hero-secondary:hover {
+.btn-modern-secondary:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-color: #ffffff;
 }

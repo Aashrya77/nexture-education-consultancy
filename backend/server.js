@@ -6,21 +6,30 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const connectDB = require('./DB/connect');
 const app = express();
+const path = require('path');
 
 // Import routes
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const teamRoutes = require('./routes/team');
-
+const uploadRoutes = require('./routes/homeContent');
 const universityRoutes = require('./routes/university');
 
 // Middleware
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+    origin: ['http://localhost:3000'],
+    credentials: true,  
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res, filePath) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  }
 }));
 
 // Rate limiting
@@ -56,6 +65,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/team', teamRoutes);
 
 app.use('/api/universities', universityRoutes);
+app.use('/api/home', uploadRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

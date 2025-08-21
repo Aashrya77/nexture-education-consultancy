@@ -5,33 +5,38 @@ import { Link } from "react-router-dom"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import "./HomePage.css"
+import axios from "axios"
+import  base_url  from "../config"
 
 export default function HomePage() {
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchHomepageContent()
-  }, [])
+  // Fetch homepage content from API
 
-  const fetchHomepageContent = async () => {
+  // Fallback content in case API fail
+  const getContent = async () => {
     try {
-      const response = await fetch("/api/homepage-content")
-      if (response.ok) {
-        const data = await response.json()
-        setContent(data)
+      const response = await axios.get("http://localhost:5000/api/home")
+      if (response.statusText === "OK") {
+        setContent(response.data.data)
       } else {
-        // Fallback to default content if API fails
         setContent(getDefaultContent())
       }
-    } catch (error) {
-      console.error("Error fetching homepage content:", error)
-      // Fallback to default content
-      setContent(getDefaultContent())
-    } finally {
       setLoading(false)
+    } catch (error) {
+      console.error("Error fetching home content:", error)
+      setContent(getDefaultContent())
+      setLoading(false)
+      
     }
   }
+
+  useEffect(() => {
+    getContent()
+  }, [])
+
+
 
   const getDefaultContent = () => ({
     hero: {
@@ -145,7 +150,6 @@ export default function HomePage() {
     )
   }
 
-  const { hero, stats, features, testimonials, destinations, courses } = content
 
   return (
     <div className="homepage">
@@ -153,41 +157,40 @@ export default function HomePage() {
       {/* Modern Hero Section */}
       <section className="modern-hero-section">
         <div className="modern-hero-container">
-          <div className="hero-content-wrapper">
-            <div className="hero-left">
-              <div className="hero-badge">{hero.subtitle}</div>
+          {content && content.map((content) => {
+            const { title, description, images, _id, highlight } = content
+         
+            return (
+               <div className="hero-content-wrapper" key={_id}>
+            <div className="hero-left" >
+              <div className="hero-badge">Your Trusted Education Partner</div>
               <h1 className="modern-hero-title">
-                {hero.title.split(" ").slice(0, -3).join(" ")}
-                <span className="hero-highlight"> {hero.title.split(" ").slice(-3).join(" ")}</span>
+               {title}
+                <span className="hero-highlight">{highlight}</span>
               </h1>
-              <p className="modern-hero-subtitle">{hero.description}</p>
+              <p className="modern-hero-subtitle">{description}</p>
               <div className="hero-cta-wrapper">
                 <Link to="/consultation" className="btn-modern-primary">
-                  {hero.primaryButtonText}
+                 Get Free Consultation
                   <span className="btn-arrow">→</span>
                 </Link>
                 <Link to="/study-abroad" className="btn-modern-secondary">
-                  {hero.secondaryButtonText}
+                 Explore Destinations
+                  <span className="btn-arrow">→</span>
                 </Link>
               </div>
             </div>
-
             <div className="hero-right">
-              <div className="stats-panel">
-                <div className="stats-header">
-                  <h3>Quick Stats</h3>
-                </div>
-                <div className="stats-grid">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="stat-item">
-                      <div className="stat-number">{stat.number}</div>
-                      <div className="stat-label">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <img
+                src={images && images.length > 0 ? `${base_url}/` + images[0] : "https://via.placeholder.com/600x400"}
+                alt="Hero"
+                className="hero-image"
+              />
             </div>
           </div>
+            )
+          })}
+         
         </div>
       </section>
 
@@ -204,23 +207,7 @@ export default function HomePage() {
           </div>
 
           <div className="features-grid">
-            {features.map((feature, index) => (
-              <div key={index} className="feature-card">
-                <div className="feature-icon">{feature.icon}</div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-description">{feature.description}</p>
-                <ul className="feature-highlights">
-                  {feature.highlights.map((highlight, idx) => (
-                    <li key={idx}>{highlight}</li>
-                  ))}
-                </ul>
-                <div className="feature-cta">
-                  <Link to="/contact" className="feature-link">
-                    Learn More →
-                  </Link>
-                </div>
-              </div>
-            ))}
+           
           </div>
         </div>
       </section>
@@ -233,19 +220,7 @@ export default function HomePage() {
             <p className="destinations-subtitle">Explore top countries for your international education</p>
           </div>
           <div className="destinations-grid">
-            {destinations.map((destination, index) => (
-              <div key={index} className="destination-card">
-                <div className="destination-flag">{destination.flag}</div>
-                <h3 className="destination-name">{destination.name}</h3>
-                <div className="destination-stats">
-                  <span className="destination-universities">{destination.universities} Universities</span>
-                </div>
-                <p className="destination-popular">Popular: {destination.popular}</p>
-                <Link to="/study-abroad" className="destination-link">
-                  Explore →
-                </Link>
-              </div>
-            ))}
+           
           </div>
         </div>
       </section>
@@ -258,34 +233,7 @@ export default function HomePage() {
             <p className="courses-subtitle">Expert coaching for standardized tests with proven results</p>
           </div>
           <div className="courses-grid">
-            {courses.map((course, index) => (
-              <div key={index} className="course-card">
-                <div className="course-header">
-                  <h3 className="course-name">{course.name}</h3>
-                  <div className="course-rating">
-                    <span className="course-stars">⭐⭐⭐⭐⭐</span>
-                    <span className="course-rating-number">{course.rating}</span>
-                  </div>
-                </div>
-                <div className="course-details">
-                  <div className="course-detail">
-                    <span className="course-detail-label">Duration:</span>
-                    <span className="course-detail-value">{course.duration}</span>
-                  </div>
-                  <div className="course-detail">
-                    <span className="course-detail-label">Students:</span>
-                    <span className="course-detail-value">{course.students}</span>
-                  </div>
-                  <div className="course-detail">
-                    <span className="course-detail-label">Price:</span>
-                    <span className="course-detail-value">{course.price}</span>
-                  </div>
-                </div>
-                <Link to="/preparation-classes" className="course-cta">
-                  Enroll Now
-                </Link>
-              </div>
-            ))}
+           
           </div>
         </div>
       </section>
@@ -299,27 +247,7 @@ export default function HomePage() {
           </div>
 
           <div className="testimonials-grid">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="testimonial-card">
-                <div className="testimonial-rating">
-                  {Array.from({ length: testimonial.rating }, (_, i) => (
-                    <span key={i} className="testimonial-star">
-                      ⭐
-                    </span>
-                  ))}
-                </div>
-                <p className="testimonial-quote">"{testimonial.quote}"</p>
-                <div className="testimonial-author">
-                  <div className="testimonial-avatar">{testimonial.name.charAt(0)}</div>
-                  <div className="testimonial-info">
-                    <h4>{testimonial.name}</h4>
-                    <p className="testimonial-course">{testimonial.course}</p>
-                    <p className="testimonial-university">{testimonial.university}</p>
-                    <p className="testimonial-country">{testimonial.country}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          
           </div>
         </div>
       </section>
