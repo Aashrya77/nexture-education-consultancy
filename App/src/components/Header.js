@@ -15,6 +15,27 @@ export default function Header() {
 
   return (
     <header className="header">
+      <div className='header-bar'>
+        <div className="header-bar-content">
+        <div className="contact-info">
+          <div className="contact-item">
+            
+            <span>+91 98765 43210</span>
+          </div>
+          <div className="contact-item">
+            
+            <span>info@nextureeducation.com</span>
+          </div>
+          <div className="contact-item">
+            
+            <span>Kathmandu, Nepal</span>
+          </div>
+        </div>
+        <div className="tagline">
+          Your next step to a bright future
+        </div>
+      </div>
+      </div>
       <div className="header-container">
         <div className="header-content">
           <Link to="/" className="header-logo">
@@ -45,7 +66,7 @@ export default function Header() {
           
           {/* Desktop CTA */}
           <div className="header-cta">
-            {user ? (
+            {user && (
               <div className="header-user-menu">
                 <span className="header-user-greeting">
                   👋 Hi, {user.firstName || user.name}
@@ -59,19 +80,14 @@ export default function Header() {
                   Logout
                 </button>
               </div>
-            ) : (
-              <div className="header-auth-buttons">
-                <Link to="/login" className="btn-outline">
-                  Login
-                </Link>
-                <Link to="/register" className="btn-secondary">
-                  Register
-                </Link>
-                <Link to="/consultation" className="btn-primary">
-                  Book Consultation
-                </Link>
+            ) 
+
+            }
+            <div className='header-cta-buttons'>
+              <button className="cta-btn">
+                Book Consultation
+              </button>
               </div>
-            )}
           </div>
           
           {/* Mobile Menu Button */}

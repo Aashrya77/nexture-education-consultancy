@@ -9,7 +9,7 @@ import axios from "axios"
 import  base_url  from "../config"
 
 export default function HomePage() {
-  const [content, setContent] = useState(null)
+  const [content, setContent] = useState(null || [])
   const [loading, setLoading] = useState(true)
 
   // Fetch homepage content from API
@@ -138,17 +138,6 @@ export default function HomePage() {
     ],
   })
 
-  if (loading) {
-    return (
-      <div className="homepage">
-        <Header />
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading...</div>
-        </div>
-        <Footer />
-      </div>
-    )
-  }
 
 
   return (
@@ -157,7 +146,7 @@ export default function HomePage() {
       {/* Modern Hero Section */}
       <section className="modern-hero-section">
         <div className="modern-hero-container">
-          {content && content.map((content) => {
+          {content ? content.map((content) => {
             const { title, description, images, _id, highlight } = content
          
             return (
@@ -189,7 +178,40 @@ export default function HomePage() {
             </div>
           </div>
             )
-          })}
+          }): 
+          (
+            <div className="hero-content-wrapper">
+              <div className="hero-left">
+                <div className="hero-badge">Your Trusted Education Partner</div>
+                <h1 className="modern-hero-title">
+                  Your Next Step to a Bright Future
+                  <span className="hero-highlight">Nexture Education</span>
+                </h1>
+                <p className="modern-hero-subtitle">
+                  Expert guidance for study abroad and test preparation. We help students achieve their dreams of international education with personalized coaching and comprehensive support.
+                </p>
+                <div className="hero-cta-wrapper">
+                  <Link to="/consultation" className="btn-modern-primary">
+                    Get Free Consultation
+                    <span className="btn-arrow">→</span>
+                  </Link>
+                  <Link to="/study-abroad" className="btn-modern-secondary">
+                    Explore Destinations
+                    <span className="btn-arrow">→</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="hero-right">
+                <img
+                  src="https://via.placeholder.com/600x400"
+                  alt="Hero"
+                  className="hero-image"
+                />
+              </div>
+            </div>
+          )
+          
+          }
          
         </div>
       </section>
