@@ -4,12 +4,12 @@ import './App.css';
 
 
 // Import pages
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
+import HomePage from './pages/HomePage/HomePage';
+import AboutPage from './pages/AboutPage/AboutPage';
 import StudyAbroadPage from './pages/StudyAbroadPage';
 import PreparationClassesPage from './pages/PreparationClassesPage';
-import BlogPage from './pages/BlogPage';
-import ContactPage from './pages/ContactPage';
+import BlogPage from './pages/Blogs/BlogPage';
+import ContactPage from './pages/ContactPage/ContactPage';
 import ConsultationPage from './pages/ConsultationPage';
 import LoginPage from './pages/Auth/Login/LoginPage';
 import RegisterPage from './pages/Auth/Register/RegisterPage';
@@ -27,6 +27,7 @@ import AdminCountriesPage from './pages/admin/AdminCountriesPage';
 import AdminCoursesPage from './pages/admin/AdminCoursesPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminTestimonialsPage from './pages/admin/AdminTestimonialsPage';
+import AdminHomepagePage from './pages/admin/AdminHome/AdminHomepagePage';
 
 // Import layout
 import PublicLayout from './components/PublicLayout';
@@ -53,6 +54,7 @@ function App() {
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminPage />} />
+            <Route path="homepage" element={<AdminHomepagePage />} />
             <Route path="services" element={<AdminServicesPage />} />
             <Route path="team" element={<AdminTeamPage />} />
             <Route path="blog" element={<AdminBlogPage />} />

@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
+import Header from "../../components/Header"
+import Footer from "../../components/Footer"
 import "./HomePage.css"
 import axios from "axios"
-import  base_url  from "../config"
+import  base_url  from "../../config"
 
 export default function HomePage() {
   const [content, setContent] = useState(null || [])
@@ -15,6 +15,113 @@ export default function HomePage() {
   // Fetch homepage content from API
 
   // Fallback content in case API fail
+
+  const services = [
+    {
+      id: 1,
+      icon: '🌐',
+      iconClass: 'icon-purple',
+      title: 'Study Abroad Consulting',
+      description: 'Expert guidance for university selection, application process, and visa assistance',
+      buttonText: 'Learn More'
+    },
+    {
+      id: 2,
+      icon: '📖',
+      iconClass: 'icon-blue',
+      title: 'Test Preparation',
+      description: 'Comprehensive coaching for IELTS, TOEFL, GRE, GMAT, and other standardized tests',
+      buttonText: 'Learn More'
+    },
+    {
+      id: 3,
+      icon: '👥',
+      iconClass: 'icon-green',
+      title: 'Career Counseling',
+      description: 'Personalized career guidance and mentorship for your academic journey',
+      buttonText: 'Learn More'
+    }
+  ];
+
+   const destinations = [
+    {
+      id: 1,
+      flag: '🇺🇸',
+      country: 'United States',
+      universities: '500+ Universities'
+    },
+    {
+      id: 2,
+      flag: '🇨🇦',
+      country: 'Canada',
+      universities: '200+ Universities'
+    },
+    {
+      id: 3,
+      flag: '🇬🇧',
+      country: 'United Kingdom',
+      universities: '150+ Universities'
+    },
+    {
+      id: 4,
+      flag: '🇦🇺',
+      country: 'Australia',
+      universities: '100+ Universities'
+    }
+  ];
+
+  const courses = [
+    {
+      id: 1,
+      testName: 'IELTS',
+      category: 'English Proficiency',
+      duration: '8 weeks',
+      price: '₹15,000'
+    },
+    {
+      id: 2,
+      testName: 'TOEFL',
+      category: 'English Proficiency',
+      duration: '10 weeks',
+      price: '₹18,000'
+    },
+    {
+      id: 3,
+      testName: 'GRE',
+      category: 'Graduate Admission',
+      duration: '12 weeks',
+      price: '₹25,000'
+    },
+    {
+      id: 4,
+      testName: 'GMAT',
+      category: 'Business School',
+      duration: '10 weeks',
+      price: '₹22,000'
+    }
+  ];
+
+ const stories = [
+    {
+      id: 1,
+      rating: 5,
+      testimonial: "Nexture Education made my dream of studying in Canada a reality. Their guidance was invaluable throughout the entire process.",
+      studentName: "Sarah Johnson"
+    },
+    {
+      id: 2,
+      rating: 5,
+      testimonial: "The GMAT preparation course helped me achieve a score of 750. I couldn't have done it without their expert coaching.",
+      studentName: "Michael Chen"
+    }
+  ];
+
+  const renderStars = (rating) => {
+    return Array(rating).fill(0).map((_, index) => (
+      <span key={index} className="star">★</span>
+    ));
+  };
+
   const getContent = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/home")
@@ -219,60 +326,143 @@ export default function HomePage() {
   
 
       {/* Features Section */}
-      <section className="features-section">
-        <div className="features-container">
-          <div className="features-header">
-            <h2 className="features-title">Why Choose Nexture Education?</h2>
-            <p className="features-subtitle">
-              We provide comprehensive support for your international education journey
-            </p>
+   <div className="services-container">
+      <div className="services-header">
+        <h2 className="services-title">Our Services</h2>
+        <p className="services-subtitle">
+          Comprehensive education services to help you achieve your international study goals
+        </p>
+      </div>
+      
+      <div className="services-grid">
+        {services.map((service) => (
+          <div key={service.id} className="service-card">
+            <div className="service-content">
+              <div className={`icon-container ${service.iconClass}`}>
+                {service.icon}
+              </div>
+              
+              <h3 className="service-title">{service.title}</h3>
+              
+              <p className="service-description">{service.description}</p>
+            </div>
+            
+            <button className="learn-more-button">
+              {service.buttonText}
+            </button>
           </div>
-
-          <div className="features-grid">
-           
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
 
       {/* Study Destinations */}
-      <section className="destinations-section">
-        <div className="destinations-container">
-          <div className="destinations-header">
-            <h2 className="destinations-title">Popular Study Destinations</h2>
-            <p className="destinations-subtitle">Explore top countries for your international education</p>
+      <div className="destinations-container">
+      <div className="destinations-header">
+        <h2 className="destinations-title">Popular Study Destinations</h2>
+        <p className="destinations-subtitle">
+          Explore top countries for international education
+        </p>
+      </div>
+      
+      <div className="destinations-grid">
+        {destinations.map((destination) => (
+          <div key={destination.id} className="destination-card">
+            <div className="flag-container">
+              <span className="flag-icon">{destination.flag}</span>
+            </div>
+            
+            <h3 className="destination-title">{destination.country}</h3>
+            
+            <p className="destination-universities">{destination.universities}</p>
           </div>
-          <div className="destinations-grid">
-           
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+      
+      <div className="destinations-footer">
+        <button className="view-all-button">
+          View All Destinations
+          <span className="arrow-icon">→</span>
+        </button>
+      </div>
+    </div>
 
       {/* Test Prep Courses */}
-      <section className="courses-section">
-        <div className="courses-container">
-          <div className="courses-header">
-            <h2 className="courses-title">Test Preparation Courses</h2>
-            <p className="courses-subtitle">Expert coaching for standardized tests with proven results</p>
+         <div className="test-prep-container">
+      <div className="test-prep-header">
+        <h2 className="test-prep-title">Test Preparation Courses</h2>
+        <p className="test-prep-subtitle">
+          Expert coaching for all major standardized tests
+        </p>
+      </div>
+      
+      <div className="courses-grid">
+        {courses.map((course) => (
+          <div key={course.id} className="course-card">
+            <div className="course-header">
+              <div className="course-test-name">{course.testName}</div>
+              <div className="course-category">{course.category}</div>
+            </div>
+            
+            <div className="course-details">
+              <div className="course-detail">
+                <span className="check-icon">✓</span>
+                <span className="detail-text">Duration: {course.duration}</span>
+              </div>
+              
+              <div className="course-detail">
+                <span className="check-icon">✓</span>
+                <span className="detail-text">Starting from {course.price}</span>
+              </div>
+            </div>
+            
+            <button className="learn-more-btn">
+              Learn More
+            </button>
           </div>
-          <div className="courses-grid">
-           
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+      
+      <div className="test-prep-footer">
+        <button className="view-all-courses-btn">
+          View All Courses
+          <span className="arrow-icon">→</span>
+        </button>
+      </div>
+    </div>
 
       {/* Testimonials */}
-      <section className="testimonials-section">
-        <div className="testimonials-container">
-          <div className="testimonials-header">
-            <h2 className="testimonials-title">Success Stories</h2>
-            <p className="testimonials-subtitle">Hear from our successful students around the world</p>
+       <div className="success-stories-container">
+      <div className="success-stories-header">
+        <h2 className="success-stories-title">Student Success Stories</h2>
+        <p className="success-stories-subtitle">
+          Hear from our successful students
+        </p>
+      </div>
+      
+      <div className="stories-grid">
+        {stories.map((story) => (
+          <div key={story.id} className="story-card">
+            <div className="rating-container">
+              {renderStars(story.rating)}
+            </div>
+            
+            <blockquote className="testimonial">
+              "{story.testimonial}"
+            </blockquote>
+            
+            <div className="student-name">
+              {story.studentName}
+            </div>
           </div>
-
-          <div className="testimonials-grid">
-          
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+      
+      <div className="success-stories-footer">
+        <button className="read-more-btn">
+          Read More Success Stories
+        </button>
+      </div>
+    </div>
 
       <Footer />
     </div>
