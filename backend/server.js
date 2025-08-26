@@ -15,6 +15,7 @@ const adminRoutes = require('./routes/admin');
 const teamRoutes = require('./routes/team');
 const uploadRoutes = require('./routes/homeContent');
 const universityRoutes = require('./routes/university');
+const blogRoutes = require('./routes/Blogs');
 
 // Middleware
 app.use(helmet());
@@ -66,11 +67,12 @@ app.use('/api/team', teamRoutes);
 
 app.use('/api/universities', universityRoutes);
 app.use('/api/home', uploadRoutes);
+app.use('/api/blogs', blogRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
-  
+   
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map(e => e.message);

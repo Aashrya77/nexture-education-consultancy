@@ -20,7 +20,6 @@ import AdminPage from './pages/admin/AdminPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminServicesPage from './pages/admin/AdminServicesPage';
 import AdminTeamPage from './pages/admin/AdminTeamPage';
-import AdminBlogPage from './pages/admin/AdminBlogPage';
 import AdminContactsPage from './pages/admin/AdminContactsPage';
 import AdminContentPage from './pages/admin/AdminContentPage';
 import AdminCountriesPage from './pages/admin/AdminCountriesPage';
@@ -28,7 +27,7 @@ import AdminCoursesPage from './pages/admin/AdminCoursesPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminTestimonialsPage from './pages/admin/AdminTestimonialsPage';
 import AdminHomepagePage from './pages/admin/AdminHome/AdminHomepagePage';
-
+import AdminBlog from './pages/admin/AdminBlog/AdminBlog'
 // Import layout
 import PublicLayout from './components/PublicLayout';
 
@@ -57,7 +56,7 @@ function App() {
             <Route path="homepage" element={<AdminHomepagePage />} />
             <Route path="services" element={<AdminServicesPage />} />
             <Route path="team" element={<AdminTeamPage />} />
-            <Route path="blog" element={<AdminBlogPage />} />
+            <Route path="blog" element={<AdminBlog />} />
             <Route path="contacts" element={<AdminContactsPage />} />
             <Route path="content" element={<AdminContentPage />} />
             <Route path="countries" element={<AdminCountriesPage />} />

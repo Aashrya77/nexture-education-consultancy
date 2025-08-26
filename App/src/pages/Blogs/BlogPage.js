@@ -1,6 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./BlogPage.css"
+import axios from 'axios';
+import base_url from '../../config';
 const BlogPage = () => {
+
+  const [blogs, setBlogs] = React.useState([]); // State to hold blog posts
+
+  const getBlogs = async () => {
+    try {
+      const response = await axios.get(`${base_url}/api/blogs`);
+      console.log(response.data);
+      setBlogs(response.data);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+      
+    }
+  }
+
+  useEffect(() => {
+    getBlogs();
+  }, []);
   const blogPosts = [
     {
       id: 1,
@@ -41,11 +60,13 @@ const BlogPage = () => {
       <h1 className="section-title">Latest Articles</h1>
       <p className="section-subtitle">Insights and tips for your international education journey</p>
       <div className="blog-posts-grid">
-        {blogPosts.map((post) => (
-          <article key={post.id} className="blog-post-card">
+        {blogs.map((post) => {
+        const { _id, title, content, images, tags } = post;
+        return (
+          <article key={_id} className="blog-post-card">
             <div className="blog-post-image">
-              {post.image ? (
-                <img src={post.image} alt={post.title} />
+              {post.images[0] ? (
+                <img src={`${base_url}/${images[0]}`} alt={title} />
               ) : (
                 <div className="image-placeholder">
                   <span className="placeholder-icon">🖼️</span>
@@ -57,17 +78,17 @@ const BlogPage = () => {
               <div className="blog-post-meta">
                 <span className="author">
                   <span className="author-icon">👤</span>
-                  {post.author}
+                 
                 </span>
                 <span className="date">
                   <span className="date-icon">📅</span>
-                  {post.date}
+                  
                 </span>
               </div>
               
-              <h3 className="blog-post-title">{post.title}</h3>
+              <h3 className="blog-post-title">{title}</h3>
               
-              <p className="blog-post-excerpt">{post.excerpt}</p>
+              <p className="blog-post-excerpt">{content}</p>
               
               <div className="blog-post-footer">
                 <div className="tags-container">
@@ -77,13 +98,14 @@ const BlogPage = () => {
                 </div>
                 
                 <a href="#" className="read-more-link">
-                  {post.readMore}
+                  
                   <span className="arrow-icon">→</span>
                 </a>
               </div>
             </div>
           </article>
-        ))}
+        );
+      })}
       </div>
     </div>
     </>
